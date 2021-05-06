@@ -5,7 +5,7 @@ import random
 
 def dyn_seri_weighted(seri, type=None, w=None, initial=1, r=2, d=1):
     """
-    传入一维数组seri，可以是series,array,list,tuple；若不输入权重，则根据seri的长度动态计算基于几何级数或算数级数再作归一化的权重，再做算术平均；
+    传入一维数组seri，可以是series,array,list,tuple；若type='geometric'或'arithmetic'，且输入了w，则w不起作用；若不输入权重，则根据seri的长度动态计算基于几何级数或算数级数再作归一化的权重，再做算术平均；
     也可人为输入权重做算术平均；若不输入type和w，则进行简单算数平均；因为使用np.dot，则seri索引越小，权重越大；将seri各点与权重相乘再相加，得到一个最终点。
     :param seri: 需要进行加权变成一个点的一维数组
     :param type: 采用几何级数或算数级数进行加权，或人为指定权重，或默认权重相等，type = 'geometric'或'arithmetic'或None；若type='geometric'或'arithmetic'，且输入了w，则w不起作用。
@@ -39,7 +39,7 @@ def dyn_seri_weighted(seri, type=None, w=None, initial=1, r=2, d=1):
 
 def dyn_df_weighted(df, type=None, w=None, initial=1, r=2, d=1):
     """
-    传入二维数组df，若不输入权重，则根据df的列数动态计算基于几何级数或算数级数再作归一化的权重，再做算术平均；
+    传入二维数组df；若type='geometric'或'arithmetic'，且输入了w，则w不起作用；若不输入权重，则根据df的列数动态计算基于几何级数或算数级数再作归一化的权重，再做算术平均；
     也可人为输入权重做算术平均；若不输入type和w，则进行简单算数平均；因为使用np.matmul，则df.columns的索引越小，权重越大；将df的各列与权重相乘再相加，得到一条最终的序列。
     :param df: 需要进行加权变成一条序列的二维数组，df的每列代表一条需要进行加权的序列
     :param type: 采用几何级数或算数级数进行加权，或人为指定权重，或默认权重相等，type = 'geometric'或'arithmetic'或None；若type='geometric'或'arithmetic'，且输入了w，则w不起作用。
