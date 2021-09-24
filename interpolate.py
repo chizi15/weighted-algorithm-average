@@ -39,7 +39,8 @@ print('各个y坐标值：')
 for i in range(data_x[0], data_x[-1]+1):
     print(s_curve_interp(i, data_x, data_y))
 
-# x坐标间距越小，构造出的曲线就会显示得越光滑；因为配置的插值函数在临界点处左右极限和左右一阶导数相等，所以函数在整个定义域上连续且光滑
+# x坐标间距越小，构造出的曲线就会显示得越光滑；因为配置的插值函数在临界点处原函数的左右极限相等，即连续，
+# 左右一阶导数相等，即光滑，左右二阶导数相等，即凹凸性相同，所以函数在整个定义域上连续且光滑
 # Array of evenly spaced values. For floating point arguments, the length of the result is `ceil((stop - start)/step)`.
 # Because of floating point overflow, this rule may result in the last element of `out` being greater than `stop`.
 xnew = np.arange(data_x[0], data_x[-1], 0.01)
@@ -55,6 +56,7 @@ w = [i/sum(ynew) for i in ynew]
 plt.plot(list(range(len(w))), w)
 plt.title('weights')
 plt.show()
+
 
 #########################################################################################################
 # 用scipy.interpolate插值
