@@ -48,12 +48,16 @@ def dyn_seri_weighted(seri, type=None, w=None, initial=1, r=2, d=1, low=0, up=1,
     :param seri: 需要进行加权平均变成一个值的一维数组，可以是series,array,list,tuple；在调用不同type时需注意可能有不同的顺序。
     :param type: 选择序列seri加权的类型，'amean_geo', 'amean_arith', 'amean_trim', 'amean_sigmoid', 'gmean', 'hmean',
     'smean', 'normean', None。
-    其中，'amean_geo'是权重从左至右呈几何级数递减的算术平均；'amean_arith'是权重从左至右呈算术级数递减的算术平均；
+     其中，
+    'amean_geo'是权重从左至右呈几何级数递减的算术平均；
+    'amean_arith'是权重从左至右呈算术级数递减的算术平均；
     'amean_trim'是两侧截尾简单算术平均，是按小于临界值和大于临界值去截断，而不是按顺序的索引截断；
     'amean_sigmoid'是权重从左至右呈S型升高的算术平均，即加权结果不太受序列左侧点的影响，而受右侧点影响比较大；
-    'gmean'是简单几何平均或者权重为w的加权几何平均，比算数平均更接近较小值；'hmean'是简单调和平均，结果比'gmean'更趋近较小值；
-    'smean'是均方根，比算术平均更接近较大值；'normean'是基于偏斜正态概率的加权算术平均，受两侧离群值影响小，因为假定数据出现离群值的概率小；
-    None是对序列做简单算术平均或权重为w的加权算术平均。
+    'normean'是基于偏斜正态概率的加权算术平均，受两侧离群值影响小，因为假定数据出现离群值的概率小；
+     None是对序列做简单算术平均或权重为w的加权算术平均。
+    'gmean'是简单几何平均或者权重为w的加权几何平均，比算数平均更接近较小值；
+    'hmean'是简单调和平均，结果比'gmean'更趋近较小值；
+    'smean'是均方根，比算术平均更接近较大值；
     :param w: 一维的权重系数，可以是series,array,list,tuple；若手动输入，其长度必须和一维数组seri（即序列点数）相等
     :param r: type='amean_geo'时，指定几何级数分母的公比
     :param d: type='amean_arith'时，指定算数级数分母的公差
@@ -159,3 +163,17 @@ def dyn_df_weighted(df, type=None, w=None, initial=1*2, r=2, d=1/2):
     if abs(sum(w)-1) > 0.001:
         raise Exception('weights are not useable')
     return np.matmul(df.values, w)
+
+
+x = [1]*20 + [2]*10 + [3]*5 + [100]*2
+print('原始样本：', x)
+print('简单算术平均：', dyn_seri_weighted(x, type='amean_trim'))
+print('几何级数算术平均，权重左大右小：', dyn_seri_weighted(x, type='amean_geo'))
+print('算术级数算术平均，权重左大右小：', dyn_seri_weighted(x, type='amean_arith'))
+print('S型曲线算术平均，权重左小右大：', dyn_seri_weighted(x, type='amean_sigmoid'))
+print('正态概率算术平均：', dyn_seri_weighted(x, type='normean'))
+print('加权算术平均，权重左小右大:', dyn_seri_weighted(x, type=None, w=np.arange(len(x))))
+print('简单调和平均：', dyn_seri_weighted(x, type='hmean'))
+print('简单几何平均：', dyn_seri_weighted(x, type='gmean'))
+print('加权几何平均，权重左小右大：', dyn_seri_weighted(x, type='gmean', w=np.arange(len(x))))
+print('简单均方根：', dyn_seri_weighted(x, type='smean'))
